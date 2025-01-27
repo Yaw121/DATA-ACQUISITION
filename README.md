@@ -1,4 +1,3 @@
-## PREPARING A TARGET DRIVE FOR ACQUISITION IN LINUX ##
 
 
 ## Objective
@@ -31,6 +30,7 @@ This repository documents a lab focused on data acquisition techniques using Lin
 - Experience in documenting forensic acquisition processes.
 
 
+    1. ## PREPARING A TARGET DRIVE FOR ACQUISITION IN LINUX ##
 
 ## STEPS ##
 <details>
@@ -163,9 +163,95 @@ Once confirmed, close the GParted window to return to the Terminal.
 </details>
 
 
-## ACQUIRING DATA WITH dd IN LINUX ##
+- 2. ## ACQUIRING DATA WITH dd IN LINUX ##
+
+Follow these steps to make an image of an NTFS disk on a FAT32 disk by using the dd command
+
+## STEPS ##
+
+<details>
+
+<summary><b>Task 1 - Using dd command</b></summary>
+
+1. At the shell prompt in your terminal, list all drives connected to the computer type: fdisk -l. Press Enter.
+ ![image](https://github.com/user-attachments/assets/105273d8-d9a5-49a1-8948-e140df3a7f88)
 
 
+2. To change your default directory to the target drive, type: cd /mnt/sdb1
+![image](https://github.com/user-attachments/assets/2e6a854c-c314-40e2-9156-1153bd734eb8)
+
+
+3. List the contents of the target drive’s root level by typing: ls -al
+   This command will display a detailed list of all files and directories, including hidden ones, in the root level of the /mnt/sdb1 directory.
+   ![image](https://github.com/user-attachments/assets/368c6e59-6e9f-49c6-9d4b-b009c288ed5f)
+
+
+
+4. To create a directory on the target drive for saving the image of the suspect drive, type; mkdir case01
+  This will create a folder named case01 within the mount point /mnt/sdb1, which will be used to store the forensic images
+  ![image](https://github.com/user-attachments/assets/e63fd13c-5055-4364-aa59-c0191a16545f)
+
+
+5. To change to the newly created target directory, type: cd case01
+   This command changes the current working directory to case01 within the target mount point. You’re now ready to save or manage files in this directory.
+ ![image](https://github.com/user-attachments/assets/6a781e99-fc8f-4ff2-a2a7-c6d8e33179a2)
+
+
+
+6. To create a raw format image of the suspect drive and split it into smaller segments compatible with FAT32, you can use the following command:
+   dd if=/dev/sdb1 conv=sync,noerror bs=64K | gzip -c | split -b 2000m - /system_drive_backup.img.gz
+![image](https://github.com/user-attachments/assets/1d1dd9c3-5fc2-4d6f-beeb-8e9e01a12424)
+
+
+7. After a few minutes, you will get the results of the created file image, similar to the following screenshot
+   ![image](https://github.com/user-attachments/assets/f9c01468-8c39-458d-8e94-0184ade5cf9f)
+
+Close Terminal window.
+
+
+
+8. To view the raw image that have been created from the dd and split commands, double-click Computer icon on desktop
+   ![image](https://github.com/user-attachments/assets/9e4c0435-a0ca-48e7-85eb-4e4de859a540)
+
+
+
+9. In the open window, navigate to File System on the left pane to locate the root directory.
+
+Find the system_drive_backup.img.gzaa image file. This is the first segment of the suspect drive's backup.
+Right-click on the file and select Cut to move it to another location. This prepares the file for relocation to your desired directory or storage device.
+
+![image](https://github.com/user-attachments/assets/7ab10e48-a7ca-4597-929d-bdbbabad06c1)
+
+
+10. Paste the image file to /mnt/sdb1/case01 folder.
+Close File System window.
+![image](https://github.com/user-attachments/assets/f3a46513-49e4-4664-a385-de863bf4ba58)
+
+
+
+11. To finalize the acquisition process:
+
+Reopen GParted to manage the target drive.
+Locate /dev/sdb1 in the partition list.
+Right-click on /dev/sdb1 and select Unmount to safely dismount the partition. This ensures no data corruption or loss.
+Once the partition is successfully dismounted, close the GParted window to complete the process.
+
+![image](https://github.com/user-attachments/assets/b15273e4-ad5d-4009-9bb1-a1c910f40546)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</details>
 
 
 
